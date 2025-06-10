@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor Classifier</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            margin: 0;
+            padding: 0;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .title {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .container {
+            display: flex;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+            justify-content: space-between;
+        }
+
+        .upload-section, .result-section {
+            width: 48%;
+            text-align: center;
+        }
+
+        .upload-section {
+            border-right: 2px solid rgba(255, 255, 255, 0.2);
+            padding-right: 20px;
+        }
+
+        .result-section {
+            padding-left: 20px;
+        }
+
+        .upload-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .upload-btn:focus {
+            outline: none;
+        }
+
+        .upload-btn:active {
+            transform: scale(0.98);
+        }
+
+        .image-preview img {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #FFEB3B;
+            animation: fade 1s linear infinite alternate;
+        }
+
+        @keyframes fade {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .result-box {
+            margin-top: 20px;
+            display: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-box h3 {
+            font-size: 20px;
+            color: #FFEB3B;
+        }
+
+        .result-box p {
+            font-size: 18px;
+            color: #ffffff;
+            margin-top: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .upload-section, .result-section {
+                width: 100%;
+                padding: 0;
+                border: none;
+            }
+            .upload-section {
+                border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+                padding-bottom: 20px;
+            }
+            .result-section {
+                padding-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Centered Title -->
+<div class="title">Brain Tumor Classifier</div>
+
+<div class="container">
+    <!-- Upload Section (Left) -->
+    <div class="upload-section">
+        <h2>Upload Image</h2>
+        <input type="file" id="fileInput" class="upload-btn" accept="image/*">
+        <p>Select a brain scan image to predict the tumor type.</p>
+    </div>
+
+    <!-- Prediction Result Section (Right) -->
+    <div class="result-section">
+        <h2>Prediction Result</h2>
+        <div class="image-preview" id="imagePreview"></div>
+        <div class="loading" id="loading">Processing Image...</div>
+        <div class="result-box" id="resultBox">
+            <h3>Result:</h3>
+            <p id="predictionResult">Waiting for upload...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+    function handleFileSelect(event) {
+        let file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').innerHTML = `<img src="${e.target.result}" alt="Uploaded Image">`;
+                document.getElementById('imagePreview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+
+            document.getElementById('resultBox').style.display = 'none';  // Hide previous result
+            document.getElementById('loading').style.display = 'block';   // Show loading spinner
+
+            predictImage(file);
+        }
+    }
+
+    function predictImage(file) {
+        let formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/predict', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('loading').style.display = 'none'; // Hide loading
+            document.getElementById('resultBox').style.display = 'block'; // Show result
+            document.getElementById('predictionResult').innerText = data.prediction;
+        })
+        .catch(error => {
+            document.getElementById('loading').style.display = 'none';
+            alert('Error in prediction. Please try again.');
+        });
+    }
+</script>
+
+</body>
+</html>
