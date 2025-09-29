@@ -43,7 +43,7 @@ TumorClassifierProject/
    `http://127.0.0.1:5000/`
 
 ## 📽️ Demo
-Check out the demo video on [LinkedIn]([https://www.linkedin.com/in/your-profile](https://www.linkedin.com/posts/kishore-b-2457692a3_ai-machinelearning-deeplearning-activity-7301622779215327232-we_e?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAElC6BUBKt3xG0t3BeBkbQxL2uapIKVfVa4))
+Check out the demo video on [LinkedIn]([https://www.linkedin.com/in/your-profile](https://www.linkedin.com/posts/kishore-b-2457692a3_ai-machinelearning-deeplearning-activity-7301622779215327232-we_e?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAElC6BUBKt3xG0t3BeBkbQxL2uapIKVfVa4])
 
 ## 📬 Contact
 For inquiries or collaborations, connect with me:  
